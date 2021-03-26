@@ -1,2 +1,2 @@
 # hello-world
-UOC git practice
+This is the Readme file for UOC git practices
