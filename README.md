@@ -15,6 +15,7 @@ La actividad ha sido realizada de manera individual por Pablo A. Delgado.
 
 ## Recursos
 
-* Lawson, R. (2015). Web Scraping with Python. Packt Publishing Ltd. Chapter 2. Scraping the Data.
-* Mitchel, R. (2015). Web Scraping with Python: Collecting Data from the Modern Web. O'Reilly Media, Inc. Chapter 1. Your First Web Scraper.
-
+- Subirats, L., Calvo, M. (2019). Web Scraping. Editorial UOC.
+- Masip, D. (2010). El lenguaje Python. Editorial UOC.
+- Tutorial de Github https://guides.github.com/activities/hello-world.
+- Lawson, R. (2015). Web Scraping with Python. Packt Publishing Ltd. Chapter 2. Scraping the Data.
