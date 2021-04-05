@@ -9,7 +9,8 @@ class CompetitorScraper():
     
     def __init__(self):
         self.url = "https://muebleslufe.com"
-        self.df_data = pd.DataFrame(data=None,columns=['Title', 'Price', 'Rating', 'Qty_Opiniones','Medidas_JSON_format','Image_Url', 'Item_Url'],index=['Item_Url'])
+        self.df_data = pd.DataFrame(data=None,columns=['Title', 'Price', 'Category_path', 'Rating', 'Qty_califications','Features_JSON_format','Image_Url', 'Item_Url'])
+        self.df_data_raw = pd.DataFrame(data=None,columns=['Title', 'Price', 'Category_path', 'Rating', 'Qty_califications','Features_JSON_format','Image_Url', 'Item_Url'])
 
     def bs_parse(self, html):
         return BeautifulSoup(html, 'lxml')
@@ -53,26 +54,32 @@ class CompetitorScraper():
             item_dict["Title"]=[title]
             item_dict["Price"]=[price]
             
+			# Getting Category path
+            category_path = ''
+            for tag in soup.body.find('div', {'class':"breadcrumb"}):
+                category_path += tag.string
+            item_dict["Category_path"]=[re.sub('[\t\n]+','',category_path)] 
+
             # Getting Rating
             resultset=soup.body.find_all('p',{"class":"netreviews_note_generale"})
             if len(resultset) != 0: 
                 rating=next(resultset[0].children).split()[0]
                 item_dict["Rating"]=[rating]
                 # Getting the amount of opinions
-                qty_opiniones = soup.body.find(id="reviewCount").string
-                item_dict["Qty_Opiniones"]=[qty_opiniones]
+                qty_califications = soup.body.find(id="reviewCount").string
+                item_dict["Qty_califications"]=[qty_califications]
             else:
                 item_dict["Rating"]=[None]
-                item_dict["Qty_Opiniones"]=[None]
+                item_dict["Qty_califications"]=[None]
                 
             # Getting features            
             try:
                 temp_dict = dict()
-                medidas = soup.body.find(id="extraTab_2").contents                 
-                for content in range(len(medidas)):
+                features = soup.body.find(id="extraTab_2").contents                 
+                for content in range(len(features)):
                     tag_list = []
                     string_list = []
-                    for element in medidas[content].contents:
+                    for element in features[content].contents:
                         if isinstance(element, Tag) and element.string is not None:
                             tag_list.append(element.string)
                         if isinstance(element, NavigableString):
@@ -95,10 +102,10 @@ class CompetitorScraper():
                             body_list = [None]
                         temp_dict.update(dict(zip(header_list, body_list)))
 
-                medidas_json = json.dumps(temp_dict, ensure_ascii=False)   
-                item_dict["Medidas_JSON_format"]= [medidas_json]          
+                features_json = json.dumps(temp_dict, ensure_ascii=False)   
+                item_dict["Features_JSON_format"]= [features_json]          
             except:
-                item_dict["Medidas_JSON_format"]=[None]            
+                item_dict["Features_JSON_format"]=[None]            
             
             # Getting image url
             item_dict["Image_Url"]=[soup.body.find_all('img', {'itemprop':"image"})[0].attrs['src']]
@@ -110,9 +117,10 @@ class CompetitorScraper():
     def scrape(self):    
         for cat_link in self.get_category_links():
             for item_link in self.get_items_links(cat_link):
-                self.df_data = self.df_data.append(pd.DataFrame(self.get_features(item_link)))
+                self.df_data_raw = self.df_data_raw.append(pd.DataFrame(self.get_features(item_link)))
                 time.sleep(2)
-            time.sleep(3)        
+            time.sleep(3)
+        self.df_data = self.df_data_raw.drop_duplicates()
     
     def data2csv(self, filename):
         # Overwrite to the specified file.
