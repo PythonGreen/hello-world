@@ -6,7 +6,7 @@ Esta práctica se ha realizado bajo el contexto de la asignatura Tipología y ci
 
 ## Miembros del equipo
 
-La actividad ha sido realizada de manera individual por Pablo A. Delgado.
+La actividad ha sido realizada de manera individual por **Pablo A. Delgado**.
 
 ## Ficheros del código fuente
 
