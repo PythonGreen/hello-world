@@ -8,6 +8,7 @@ import time
 class CompetitorScraper():
     
     def __init__(self):
+        # initializing url to scrape and pandas dataframe that will be used to keep the data scraped
         self.url = "https://muebleslufe.com"
         self.df_data = pd.DataFrame(data=None,columns=['Title', 'Price', 'Category_path', 'Rating', 'Qty_califications','Features_JSON_format','Image_Url', 'Item_Url'])
         self.df_data_raw = pd.DataFrame(data=None,columns=['Title', 'Price', 'Category_path', 'Rating', 'Qty_califications','Features_JSON_format','Image_Url', 'Item_Url'])
@@ -16,6 +17,7 @@ class CompetitorScraper():
         return BeautifulSoup(html, 'lxml')
 
     def download(self, url, num_retries=2, user_agent='wswp'):
+        # with this method it is possible to get the html content of an url
         print('Downloading:', url)
         headers = {'User-agent': user_agent}
         try:
@@ -29,6 +31,9 @@ class CompetitorScraper():
         return html.content
 
     def get_category_links(self):
+        # through this method you can get all posible category url of the competitor web site.
+        # All URLs are returned in a set object in order to get 1 on the n possible repeated category URLs
+        # Using an regex we can retrieve valid category URLs.
         url = self.download(self.url)
         soup = self.bs_parse(url)
         a_tags = soup.body.find_all('a')
@@ -36,6 +41,8 @@ class CompetitorScraper():
         return {link.get('href') for link in a_tags if re.match(pattern, str(link.get('href')))}
     
     def get_items_links(self, category_page):
+        # by passing through the category url to this method you can get a set with all item URLs published within the category
+        # Using an regex we can retrieve valid item URLs.
         url = self.download(category_page)
         soup = self.bs_parse(url)
         a_tags = soup.body.find_all('a')
@@ -43,6 +50,8 @@ class CompetitorScraper():
         return {link.get('href') for link in a_tags if re.match(pattern, str(link.get('href')))}
     
     def get_features(self, item_page):
+        # with the get_features method we can get all the fields needed for the item url passed by parameter.
+        # All of them are saved in a dictionary object
         url = self.download(item_page)
         soup = self.bs_parse(url)
         item_dict = dict()
@@ -54,7 +63,7 @@ class CompetitorScraper():
             item_dict["Title"]=[title]
             item_dict["Price"]=[price]
             
-			# Getting Category path
+            # Getting Category path
             category_path = ''
             for tag in soup.body.find('div', {'class':"breadcrumb"}):
                 category_path += tag.string
@@ -72,7 +81,12 @@ class CompetitorScraper():
                 item_dict["Rating"]=[None]
                 item_dict["Qty_califications"]=[None]
                 
-            # Getting features            
+            # Getting features
+            # In order to get all the features of an item we take into account all posibles combinatios:
+            # - Products without features
+            # - Product with measures and/or the material made of
+            # - Publications where you have measures of two products, for example tables and chairs
+            # - etcetera...
             try:
                 temp_dict = dict()
                 features = soup.body.find(id="extraTab_2").contents                 
@@ -114,7 +128,9 @@ class CompetitorScraper():
             
         return item_dict
     
-    def scrape(self):    
+    def scrape(self):
+        # this is the main method where you initiate the scraping process and get as result 
+        # both class pandas dataframes loaded with all Competitor data.
         for cat_link in self.get_category_links():
             for item_link in self.get_items_links(cat_link):
                 self.df_data_raw = self.df_data_raw.append(pd.DataFrame(self.get_features(item_link)))

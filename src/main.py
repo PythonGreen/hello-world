@@ -1,7 +1,7 @@
 from scrapers import CompetitorScraper
 import time
 
-output_file = 'dataset.csv'
+output_file = 'competitors_raw_data.csv'
 scraper = CompetitorScraper()
 
 start_time = time.time()
