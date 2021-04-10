@@ -19,4 +19,4 @@ La actividad ha sido realizada de manera individual por **Pablo A. Delgado**.
 - Masip, D. (2010). El lenguaje Python. Editorial UOC.
 - Tutorial de Github https://guides.github.com/activities/hello-world.
 - Lawson, R. (2015). Web Scraping with Python. Packt Publishing Ltd. Chapter 2. Scraping the Data.
-- https://guides.github.com/activities/citable-code/
+- Get DOI for a github repo: https://guides.github.com/activities/citable-code/
