@@ -42,6 +42,17 @@ Mientras que si desea guardar el dataframe en un fichero csv podemos ejecutar:
 
     filename = '~/dataset_resultante.csv'
     scraper.data2csv(filename)
+    
+El fichero resultante contendra esta informacion:
+
+* _**Title**_: Nombre del producto.
+* _**Price**_: Precio del producto.
+* _**Category_path**_: categoría a la cual pertenece el producto.
+* _**Rating**_: el rating es el promedio de las calificaciones recibidas por parte de los compradores del producto.
+* _**Qty_califications**_: cantidad de calificaciones recibidas.
+* _**Features_JSON_format**_: se guarda en un solo campo y en formato JSON las medidas y/o características del producto. 
+* _**Image_Url**_: url de la primera imagen del producto en la publicación.
+* _**Item_Url**_: url del producto dentro del sitio web.
 
 ## Recursos
 
