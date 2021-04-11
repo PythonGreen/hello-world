@@ -13,6 +13,36 @@ La actividad ha sido realizada de manera individual por **Pablo A. Delgado**.
 - **src/main.py**: punto de entrada al programa. Inicia el proceso de scraping.
 - **src/scraper.py**: contiene la implementación de la clase CompetitorScraper cuyos métodos generan el dataset en formato csv a partir de los datos extraidos de las publicaciones de productos en el sitio web de Muebles LUFE.
 
+## Ejecucion del scraper
+
+Para ejecutar el script es necesario tener instalados los siguientes modulos adicionales en python:
+
+    pandas
+    beautifulsoup4
+    requests
+    json
+    
+y para ejecutar el scraper propiamente dicho simplemente realizar esto desde la consola:
+
+    python main.py
+    
+O si se desea ejecutar el scraper desde por ej jupyter notebook, se puede ejecutar los siguientes comandos:
+
+    from scrapers import CompetitorScraper
+    
+    scraper = CompetitorScraper()   # creamos una instancia del scraper
+    scraper.scrape()                # ejecutamos el metodo que inicia el proceso de scraping. 
+    
+El tiempo promedio que le toma al scraper recuperar toda la data del sitio es de aproximadamente 40 minutos. Terminado ese tiempo, se puede consultar el resultado del scraping
+desde el panda dataframe resultante, ejecutando por ejemplo:
+
+    scraper.df_data.head()
+    
+Mientras que si desea guardar el dataframe en un fichero csv podemos ejecutar:
+
+    filename = '~/dataset_resultante.csv'
+    scraper.data2csv(filename)
+
 ## Recursos
 
 - Subirats, L., Calvo, M. (2019). Web Scraping. Editorial UOC.
